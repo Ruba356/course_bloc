@@ -3,6 +3,7 @@ import 'package:course/bloc/counter_bloc.dart';
 import 'package:course/bloc/data_bloc.dart';
 import 'package:course/bloc/data_freezed/data_freezed_bloc.dart';
 import 'package:course/bloc/internet_bloc.dart';
+import 'package:course/bloc/scroll_list_bloc.dart';
 import 'package:course/bloc/theme_bloc.dart';
 import 'package:course/cubit/locale_cubit.dart';
 import 'package:course/helper/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:course/pages/connection_page.dart';
 import 'package:course/pages/counter_page.dart';
 import 'package:course/pages/data_page.dart';
 import 'package:course/pages/locale_page.dart';
+import 'package:course/pages/scroll_list_page.dart';
 import 'package:course/pages/theme_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +34,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => InternetBloc()),
         BlocProvider(create: (_) => ThemeBloc()..add(GetCurrentThemeEvent())),
         BlocProvider(create: (_) => DataBloc()..add(GetAllDataEvent())),
-        BlocProvider(create: (_) => DataFreezedBloc(todosApi: TodosApi())
-        ..add(const DataFreezedEvent.getAllTodos()),)
+        BlocProvider(
+          create: (_) =>
+              DataFreezedBloc(todosApi: TodosApi())
+                ..add(const DataFreezedEvent.getAllTodos()),
+        ),
+        BlocProvider(create: (_) => ScrollListBloc()..add(GetPostsEvent())),
       ],
       child: BlocSelector<ThemeBloc, ThemeState, ThemeData?>(
         selector: (state) => state is LoadedThemeState ? state.themeData : null,
@@ -62,7 +68,7 @@ class MyApp extends StatelessWidget {
                   }
                   return supportedLocales.first;
                 },
-                home: const DataPage(),
+                home: const ScrollListPage(),
                 debugShowCheckedModeBanner: false,
               );
             },
